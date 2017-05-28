@@ -1,0 +1,25 @@
+PODS:
+  - Alamofire (4.4.0)
+  - SnapKit (3.2.0)
+  - SwiftyJSON (3.1.4)
+  - Swinject (2.0.0)
+  - SwinjectAutoregistration (2.0.1):
+    - Swinject (~> 2.0.0)
+
+DEPENDENCIES:
+  - Alamofire (= 4.4.0)
+  - SnapKit (~> 3.0)
+  - SwiftyJSON (= 3.1.4)
+  - Swinject (= 2.0.0)
+  - SwinjectAutoregistration (= 2.0.1)
+
+SPEC CHECKSUMS:
+  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
+  SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  Swinject: 2e964a80d70ab09b3949c99032711f89147bfd60
+  SwinjectAutoregistration: d19654c429354bad4b544c658dc92345ccdbb72c
+
+PODFILE CHECKSUM: 11cee0727c730be7caac4b883436fd4eafa5d481
+
+COCOAPODS: 1.2.1
