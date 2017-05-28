@@ -40,7 +40,7 @@ class SyncManager<Entity: NSManagedObject> {
     }
 
     private func insertNew(entityJson: JSON) {
-        var entity = entityInitializer(entityJson, context)
+        let entity = entityInitializer(entityJson, context)
         onNewEntity?(entity, context)
     }
 
