@@ -34,9 +34,14 @@ class PostsController: UITableViewController {
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 45))
         searchBar.autocapitalizationType = .none
         searchBar.delegate = self
+        searchBar.isTranslucent = false
+        searchBar.backgroundImage = UIImage() 
         tableView.tableHeaderView = searchBar
+        tableView.backgroundColor = AppColor.purple
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+        tableView.separatorStyle = .none
         clearsSelectionOnViewWillAppear = false;
+        navigationController?.navigationBar.isTranslucent = false
     }
     
     override func viewDidAppear(_ animated: Bool) {

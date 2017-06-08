@@ -9,7 +9,7 @@ class PostCell: UITableViewCell {
     var email = UILabel()
     var selectionIndicator = UIView()
     
-    static let titleFont = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
+    static let titleFont = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: UIFontWeightThin)
 
     var post: Post? {
         didSet {
@@ -30,16 +30,16 @@ class PostCell: UITableViewCell {
 
     private func createSubviews() {
         
-       
+        backgroundColor = AppColor.purple
         
         title.font = PostCell.titleFont
-        title.textColor = UIColor.black
+        title.textColor = UIColor.white
         title.numberOfLines = 0
         title.lineBreakMode = .byWordWrapping
         addSubview(title)
         title.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(15)
+            make.top.equalToSuperview().offset(22)
             make.right.equalToSuperview().offset(-20)
         }
 
@@ -48,11 +48,11 @@ class PostCell: UITableViewCell {
         addSubview(email)
         email.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(20)
-            make.bottom.equalToSuperview().offset(-15)
+            make.top.equalTo(title.snp.bottom).offset(8)
         }
         
         let selectionBackground = UIView()
-        selectionBackground.backgroundColor = UIColor(red: 0.909, green: 0.094, blue: 0.407, alpha: 1).withAlphaComponent(0.1)
+        selectionBackground.backgroundColor = AppColor.lightPurple
         selectedBackgroundView = selectionBackground
         
         selectionBackground.addSubview(selectionIndicator)
@@ -79,6 +79,6 @@ class PostCell: UITableViewCell {
     static func height(forTitle title: String, tableView: UITableView) -> CGFloat{
         let constraintRect = CGSize(width: tableView.frame.width - 40, height: .greatestFiniteMagnitude)
         let boundingBox = title.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName: PostCell.titleFont], context: nil)
-        return boundingBox.height + 55
+        return boundingBox.height + 70
     }
 }

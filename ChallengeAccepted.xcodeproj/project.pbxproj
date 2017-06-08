@@ -44,6 +44,8 @@
 		44B1E0431EE8172B0002B214 /* Dependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DC22441EE6FECF00F49A99 /* Dependencies.swift */; };
 		44B1E0451EE817B90002B214 /* InMemoryCoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DC22471EE6FF9D00F49A99 /* InMemoryCoreDataService.swift */; };
 		44B1E0461EE817B90002B214 /* MockDataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E57239D7CA77EEB08DDEEAB /* MockDataFetcher.swift */; };
+		44C442FA1EE9B8DD00172ACC /* AppColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C442F91EE9B8DD00172ACC /* AppColor.swift */; };
+		44C442FC1EE9CEDF00172ACC /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C442FB1EE9CEDF00172ACC /* UIImage+Extensions.swift */; };
 		44CE444A1EE842590026E1F4 /* ModelDeserializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CE44491EE842590026E1F4 /* ModelDeserializationTests.swift */; };
 		44CE444C1EE84AF30026E1F4 /* Albums.json in Resources */ = {isa = PBXBuildFile; fileRef = 44CE444B1EE84AF30026E1F4 /* Albums.json */; };
 		44CE444E1EE84C300026E1F4 /* Posts.json in Resources */ = {isa = PBXBuildFile; fileRef = 44CE444D1EE84C300026E1F4 /* Posts.json */; };
@@ -105,6 +107,8 @@
 		446954A71ED5DE3300012A37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		446954A91ED5DE3300012A37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		448E8BBD1ED6932D0095D90E /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		44C442F91EE9B8DD00172ACC /* AppColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppColor.swift; sourceTree = "<group>"; };
+		44C442FB1EE9CEDF00172ACC /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		44CE44491EE842590026E1F4 /* ModelDeserializationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelDeserializationTests.swift; sourceTree = "<group>"; };
 		44CE444B1EE84AF30026E1F4 /* Albums.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Albums.json; sourceTree = "<group>"; };
 		44CE444D1EE84C300026E1F4 /* Posts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Posts.json; sourceTree = "<group>"; };
@@ -225,6 +229,8 @@
 				3E57275C77F38BD1555FEAC0 /* NatworkActivity.swift */,
 				44CE44531EE86AB70026E1F4 /* CollapsableViewDelegate.swift */,
 				44CE44551EE885220026E1F4 /* UITableView+Extensions.swift */,
+				44C442F91EE9B8DD00172ACC /* AppColor.swift */,
+				44C442FB1EE9CEDF00172ACC /* UIImage+Extensions.swift */,
 			);
 			path = System;
 			sourceTree = "<group>";
@@ -557,6 +563,7 @@
 				3E57256BE5D2F3A4EC5B1D3B /* AlbumHeader.swift in Sources */,
 				3E5721FE7F238D32A8C37390 /* RemoteImage.swift in Sources */,
 				3E572F96C35F906593A896EE /* NSFetchedResultsController+Extensions.swift in Sources */,
+				44C442FA1EE9B8DD00172ACC /* AppColor.swift in Sources */,
 				44CE44561EE885220026E1F4 /* UITableView+Extensions.swift in Sources */,
 				3E572103864AE38877716B75 /* ConsoleLoggerService.swift in Sources */,
 				3E5724864EF234F02BCBA39C /* LoggerService.swift in Sources */,
@@ -568,6 +575,7 @@
 				3E572CA7BC34C3A3625B05F4 /* SyncManager.swift in Sources */,
 				3E57205DEFE2411C77EE25B5 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				3E5722B1C6F4E52471A62BE2 /* NatworkActivity.swift in Sources */,
+				44C442FC1EE9CEDF00172ACC /* UIImage+Extensions.swift in Sources */,
 				3E572290B45778CEFFCB0672 /* DataFetcher.swift in Sources */,
 				3E572E999C7E44391303BD21 /* WebDataFetcher.swift in Sources */,
 			);

@@ -28,7 +28,8 @@ class DetailsController: UIViewController, PostPresenter {
 
     override func viewDidLoad() {
         edgesForExtendedLayout = UIRectEdge()
-        view.backgroundColor = UIColor.white
+        navigationController?.navigationBar.isTranslucent = false
+        view.backgroundColor = AppColor.purple
         createSubviews()
     }
 
@@ -49,8 +50,8 @@ class DetailsController: UIViewController, PostPresenter {
     }
 
     private func createSubviews() {
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 25)
-        titleLabel.textColor = UIColor.black
+        titleLabel.font = UIFont.systemFont(ofSize: 35, weight: UIFontWeightThin)
+        titleLabel.textColor = UIColor.white
         titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = .byWordWrapping
         view.addSubview(titleLabel)
@@ -60,7 +61,7 @@ class DetailsController: UIViewController, PostPresenter {
             make.right.equalToSuperview().offset(-20)
         }
 
-        bodyLabel.textColor = UIColor.black
+        bodyLabel.textColor = UIColor.white
         bodyLabel.numberOfLines = 0
         bodyLabel.lineBreakMode = .byWordWrapping
         view.addSubview(bodyLabel)
@@ -72,17 +73,17 @@ class DetailsController: UIViewController, PostPresenter {
 
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionHeadersPinToVisibleBounds = true
-        flowLayout.headerReferenceSize = CGSize(width: 200, height: 20)
+        flowLayout.headerReferenceSize = CGSize(width: 200, height: 50)
         flowLayout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         flowLayout.itemSize = CGSize(width: 100, height: 100)
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: "Photo")
         collectionView.register(AlbumHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "Header")
-        collectionView.backgroundColor = UIColor.white
+        collectionView.backgroundColor = AppColor.purple
         collectionView.dataSource = self
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(bodyLabel.snp.bottom).offset(20)
+            make.top.equalTo(bodyLabel.snp.bottom).offset(60)
             make.left.equalTo(view)
             make.right.equalTo(view)
             make.bottom.equalTo(view)
@@ -142,6 +143,7 @@ extension DetailsController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as! AlbumHeader
         header.label.text = (fetchController.sections![indexPath.section].objects!.first as! Photo).album!.title
+        header.backgroundShape.backgroundColor = indexPath.section % 2 == 0 ? AppColor.pink : AppColor.lightPurple
         header.onCollapseDelegate = { return self.collapseSection(section: indexPath.section) }
         return header
     }

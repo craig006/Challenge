@@ -7,6 +7,7 @@ class AlbumHeader: UICollectionReusableView {
     
     var label = UILabel()
     var button = UIButton()
+    var backgroundShape = UIView()
     var onCollapseDelegate: OnCollapseDelegate?
 
     override init(frame: CGRect) {
@@ -21,27 +22,37 @@ class AlbumHeader: UICollectionReusableView {
 
     private func createSubviews() {
         
-        backgroundColor = UIColor(red:0.34, green:0.79, blue:0.87, alpha:1.0)
+        backgroundColor = UIColor.clear
+        backgroundShape.layer.cornerRadius = 25
+        backgroundShape.layer.masksToBounds = true
+        backgroundShape.backgroundColor = AppColor.pink
+        addSubview(backgroundShape)
+        backgroundShape.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(8)
+            make.width.equalTo(50)
+            make.height.equalTo(50)
+            make.right.equalToSuperview().offset(-30)
+        }
         
         button.addTarget(self, action: #selector(collapseTouchUpInside), for: .touchUpInside)
         button.setTitle("Show", for: .normal)
-        button.setTitleColor(UIColor(red:0.34, green:0.79, blue:0.87, alpha:1.0), for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize, weight: 0.1)
-        button.contentHorizontalAlignment = .right
-        addSubview(button)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize, weight: UIFontWeightThin)
+        backgroundShape.addSubview(button)
         button.snp.makeConstraints { make -> Void in
-            make.height.equalTo(self)
-            make.right.equalTo(self).offset(-25)
-            make.width.equalTo(100)
+            make.size.equalToSuperview()
+            make.top.equalToSuperview()
+            make.left.equalToSuperview()
         }
 
-        label.textColor = UIColor(red: 0.909, green: 0.094, blue: 0.407, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize, weight: 0.1)
+        label.textColor = UIColor.white
+        label.font = UIFont.italicSystemFont(ofSize: 16)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         addSubview(label)
         label.snp.makeConstraints { make -> Void in
-            make.height.equalTo(self)
+            make.top.equalToSuperview().offset(12)
+            make.bottom.equalToSuperview()
             make.left.equalTo(self).offset(20)
             make.right.equalTo(button.snp.left)
         }
