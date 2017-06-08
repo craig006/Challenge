@@ -9,6 +9,9 @@ class PostsController: UITableViewController {
     fileprivate var dataService: DataService
     fileprivate var fetchController: NSFetchedResultsController<Post>
     fileprivate let cellIdentifier = "Post"
+    
+    fileprivate var selectedIndexPath = IndexPath(row: 0, section: 0)
+
 
     init(dataService: DataService) {
         self.dataService = dataService
@@ -33,8 +36,14 @@ class PostsController: UITableViewController {
         searchBar.delegate = self
         tableView.tableHeaderView = searchBar
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+        clearsSelectionOnViewWillAppear = false;
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        tableView.selectNearestCell(indexPath: selectedIndexPath)
     }
 }
+
 // MARK: - UISearchBar delegate methods
 extension PostsController: UISearchBarDelegate {
     public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -61,12 +70,12 @@ extension PostsController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! PostCell
-        let post = fetchController.object(at: indexPath)
-        cell.post = post
+        cell.post = fetchController.object(at: indexPath)
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedIndexPath = indexPath
         if let postPresenter = postPresenter {
             let post = fetchController.object(at: indexPath)
             postPresenter.present(post: post);
@@ -84,6 +93,7 @@ extension PostsController {
 
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            print("Deleting post: \(fetchController.object(at: indexPath))")
             dataService.viewContext.delete(fetchController.object(at: indexPath))
             dataService.saveContext()
         }
@@ -111,8 +121,14 @@ extension PostsController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert:
+            if newIndexPath!.row <= selectedIndexPath.row {
+                selectedIndexPath.row += 1
+            }
             tableView.insertRows(at: [newIndexPath!], with: .fade)
         case .delete:
+            if indexPath!.row < selectedIndexPath.row {
+                selectedIndexPath.row -= 1
+            }
             tableView.deleteRows(at: [indexPath!], with: .fade)
         case .update:
             if let postCell = tableView.cellForRow(at: indexPath!) as? PostCell {
@@ -128,5 +144,8 @@ extension PostsController: NSFetchedResultsControllerDelegate {
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()
+        tableView.selectNearestCell(indexPath: selectedIndexPath)
     }
+    
+    
 }

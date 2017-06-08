@@ -8,9 +8,10 @@ class DetailsController: UIViewController, PostPresenter {
     var titleLabel = UILabel()
     var bodyLabel = UILabel()
     var albumCollectionView: UICollectionView?
-
+    
     fileprivate var fetchController: NSFetchedResultsController<Photo>
     fileprivate var dataService: DataService
+    fileprivate var collapseState = Dictionary<Int, Bool>()
 
     init(dataService: DataService) {
         self.dataService = dataService
@@ -34,14 +35,17 @@ class DetailsController: UIViewController, PostPresenter {
     func present(post: Post) {
         titleLabel.text = post.title
         bodyLabel.text = post.body
-
+        
         NSFetchedResultsController<Photo>.deleteCache(withName: "Photos")
         let predicate = NSPredicate(format: "album.userId == \(post.userId)")
         fetchController.fetchRequest.predicate = predicate
+        let sort = NSSortDescriptor(key: "\(#keyPath(Photo.albumId))", ascending: true)
+        fetchController.fetchRequest.sortDescriptors = [sort]
         fetchController.delegate = self
         fetchController.safePerformFetch()
-        albumCollectionView?.reloadData()
         albumCollectionView?.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
+        resetSectionState()
+    
     }
 
     private func createSubviews() {
@@ -68,7 +72,7 @@ class DetailsController: UIViewController, PostPresenter {
 
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.sectionHeadersPinToVisibleBounds = true
-        flowLayout.headerReferenceSize = CGSize(width: 200, height: 40)
+        flowLayout.headerReferenceSize = CGSize(width: 200, height: 20)
         flowLayout.sectionInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         flowLayout.itemSize = CGSize(width: 100, height: 100)
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
@@ -85,11 +89,39 @@ class DetailsController: UIViewController, PostPresenter {
         }
         albumCollectionView = collectionView
     }
+    
+    fileprivate func resetSectionState() {
+        if let sectionCount = fetchController.sections?.count {
+            collapseState = Dictionary<Int, Bool>(minimumCapacity: sectionCount)
+            for index in 0..<sectionCount {
+                collapseState[index] = true
+            }
+        }
+        albumCollectionView?.reloadData()
+    }
+    
+    fileprivate func collapseSection(section: Int) -> Bool {
+        self.collapseState[section] = !self.collapseState[section]!
+        albumCollectionView?.performBatchUpdates({
+            let indexPaths = (0..<self.fetchController.sections![section].numberOfObjects).map({ index in IndexPath(row: index, section: section) })
+            if self.collapseState[section]! {
+                self.albumCollectionView?.deleteItems(at: indexPaths)
+            } else {
+                self.albumCollectionView?.insertItems(at: indexPaths)
+            }
+        }, completion: nil)
+        return self.collapseState[section]!
+    }
 }
 
 // MARK: - UICollectionViewDataSource methods
 extension DetailsController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let collapsed = collapseState[section] {
+            if collapsed {
+                return 0
+            }
+        }
         return fetchController.sections![section].numberOfObjects
     }
 
@@ -104,12 +136,13 @@ extension DetailsController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 40)
+        return CGSize(width: collectionView.frame.width, height: 20)
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "Header", for: indexPath) as! AlbumHeader
         header.label.text = (fetchController.sections![indexPath.section].objects!.first as! Photo).album!.title
+        header.onCollapseDelegate = { return self.collapseSection(section: indexPath.section) }
         return header
     }
 }
@@ -117,10 +150,10 @@ extension DetailsController: UICollectionViewDataSource {
 extension DetailsController: NSFetchedResultsControllerDelegate {
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        albumCollectionView?.reloadData()
+        resetSectionState()
     }
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        albumCollectionView?.reloadData()
+        resetSectionState()
     }
 }

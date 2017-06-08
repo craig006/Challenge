@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         splitController.viewControllers = [leftNavigationController, rightNavigationController]
         splitController.preferredDisplayMode = .allVisible
+        splitController.maximumPrimaryColumnWidth = 320
+        splitController.minimumPrimaryColumnWidth = 320
 
         self.window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = splitController
@@ -28,9 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-
-            let service = Dependencies.resolve(DataSyncService.self)!
-            service.syncData()
+        let service = Dependencies.resolve(DataSyncService.self)!
+        service.syncData()
     }
 
 }

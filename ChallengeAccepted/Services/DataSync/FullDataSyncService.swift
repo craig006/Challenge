@@ -6,24 +6,26 @@ import CoreData
 class FullDataSyncService: DataSyncService {
 
     var dataService: DataService
+    var dataFetcher: DataFetcher
 
-    init(dataService: DataService) {
+    init(dataService: DataService, dataFetcher: DataFetcher) {
         self.dataService = dataService
+        self.dataFetcher = dataFetcher
     }
 
     func syncData() {
 
         let context = dataService.newBackgroundContext()
 
-        let userSyncManager = SyncManager<User>(resourceName: "users", context: context, entityInitializer: User.init)
+        let userSyncManager = SyncManager<User>(resourceName: "users", context: context, entityInitializer: User.init, dataFetcher: dataFetcher)
 
-        let postsSyncManager = SyncManager<Post>(resourceName: "posts", context: context, entityInitializer: Post.init)
+        let postsSyncManager = SyncManager<Post>(resourceName: "posts", context: context, entityInitializer: Post.init, dataFetcher: dataFetcher)
         postsSyncManager.onNewEntity = onNew
 
-        let albumSyncManager = SyncManager<Album>(resourceName: "albums", context: context, entityInitializer: Album.init)
+        let albumSyncManager = SyncManager<Album>(resourceName: "albums", context: context, entityInitializer: Album.init, dataFetcher: dataFetcher)
         albumSyncManager.onNewEntity = onNew
 
-        let photoSyncManager = SyncManager<Photo>(resourceName: "photos", context: context, entityInitializer: Photo.init)
+        let photoSyncManager = SyncManager<Photo>(resourceName: "photos", context: context, entityInitializer: Photo.init, dataFetcher: dataFetcher)
         photoSyncManager.onNewEntity = onNew
 
         UIKit.UIApplication.shared.isNetworkActivityIndicatorVisible = true

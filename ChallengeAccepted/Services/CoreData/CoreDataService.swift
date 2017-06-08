@@ -4,24 +4,34 @@ import CoreData
 class CoreDataService: DataService {
 
     var logger: LoggerService
+    
     init(logger: LoggerService) {
         self.logger = logger
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
     }
 
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "ChellengeAccepted")
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                self.logger.log(error: error)
+    private var _persistentContainer: NSPersistentContainer?
+    
+    var persistentContainer: NSPersistentContainer
+    {
+        get {
+            
+            if _persistentContainer == nil {
+                _persistentContainer = createContainer()
             }
-        })
-        return container
-    }()
+            
+            return _persistentContainer!
+        }
+    }
+    
 
     var viewContext: NSManagedObjectContext
     {
         return persistentContainer.viewContext
+    }
+    
+    var persistentStoreDescription: NSPersistentStoreDescription? {
+        return nil
     }
 
     func newBackgroundContext() -> NSManagedObjectContext
@@ -42,4 +52,18 @@ class CoreDataService: DataService {
             }
         }
     }
+    
+    func createContainer() -> NSPersistentContainer {
+        let container = NSPersistentContainer(name: "ChellengeAccepted")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                self.logger.log(error: error)
+            }
+        })
+        return container
+
+    }
 }
+
+
+

@@ -4,20 +4,21 @@ import SwiftyJSON
 import Alamofire
 
 class SyncManager<Entity: NSManagedObject> {
+    
     var onNewEntity: ((Entity, NSManagedObjectContext) -> ())?
     var logger = Dependencies.resolve(LoggerService.self)
+    private var dataFetcher: DataFetcher
     private var resourceName: String
     private var context: NSManagedObjectContext
     private var entityInitializer: (JSON, NSManagedObjectContext) -> Entity
     private var completion: (() -> ())?
-    private let baseUrl = URL(string: "http://jsonplaceholder.typicode.com/")!
 
-
-    init(resourceName: String, context: NSManagedObjectContext, entityInitializer: @escaping (JSON, NSManagedObjectContext) -> Entity) {
+    init(resourceName: String, context: NSManagedObjectContext, entityInitializer: @escaping (JSON, NSManagedObjectContext) -> Entity, dataFetcher: DataFetcher) {
         self.resourceName = resourceName
         self.context = context
         self.resourceName = resourceName
         self.entityInitializer = entityInitializer
+        self.dataFetcher = dataFetcher
     }
 
     func startSync(completion: @escaping () -> ()) {
@@ -26,7 +27,7 @@ class SyncManager<Entity: NSManagedObject> {
     }
 
     private func download() {
-        fetch(resource: resourceName, successCallback: sync)
+        dataFetcher.fetch(resource: resourceName, successCallback: sync)
     }
 
     private func sync(json: JSON) {
@@ -42,18 +43,5 @@ class SyncManager<Entity: NSManagedObject> {
     private func insertNew(entityJson: JSON) {
         let entity = entityInitializer(entityJson, context)
         onNewEntity?(entity, context)
-    }
-
-    private func fetch(resource: String, successCallback: @escaping (JSON) -> ()) {
-        let url = URL(string: resource, relativeTo: baseUrl)!
-        Alamofire.request(url).validate().responseJSON(queue: DispatchQueue.global(qos: .utility)) { response in
-            if let jsonData = response.data {
-                successCallback(JSON(jsonData))
-            } else {
-                if let error = response.error {
-                    self.logger?.log(error: error)
-                }
-            }
-        }
     }
 }
